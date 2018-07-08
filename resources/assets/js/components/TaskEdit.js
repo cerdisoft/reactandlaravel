@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 
-class App extends Component {
+class TaskEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
             name: '',
-            tasks: []
+            task: []
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.renderTask = this.renderTask.bind(this);
-        this.handleDelete = this.handleDelete.bind(this);
     }
     //handle change
     handleChange(e) {
@@ -106,4 +104,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default TaskEdit;

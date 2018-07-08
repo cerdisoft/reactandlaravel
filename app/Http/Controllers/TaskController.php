@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Task;
 
 class TaskController extends Controller
 {
@@ -48,16 +49,22 @@ class TaskController extends Controller
 
     public function edit($id)
     {
-        //
+        $task = Task::findOrFail($id);
+        return response()->json([
+            'task' => $task,
+        ]);
     }
 
     public function update(Request $request, $id)
     {
-        //
+        $input = $request->all();
+        $task = Task::findOrFail($id);
+        $task->update($input);
+        return response()->json($task->with('user')->find($task->id));
     }
 
     public function destroy($id)
     {
-        //
+        Task::findOrFail($id)->delete();
     }
 }
