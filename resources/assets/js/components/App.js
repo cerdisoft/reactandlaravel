@@ -39,10 +39,19 @@ class App extends Component {
             <div key={task.id} className="media">
                 <div className="media-body">
                     <div>
-                        {task.name} 
+                        {task.name}{' '}
+                        <span className="text-muted">
+                            <br />
+                            by {task.user.name} |{' '} 
+                            {task.updated_at
+                                .split(' ')
+                                .slice(1)
+                                .join()}
+                        </span>
                         <Link to={`/${task.id}/edit`} className="btn btn-sm btn-success float-right">Update</Link>
                         <button onClick={() => this.handleDelete(task.id)} className="btn btn-sm btn-warning float-right">Delete</button>
                     </div>
+                    <hr />
                 </div>
             </div>            
         ));
@@ -77,7 +86,7 @@ class App extends Component {
                 <div className="row justify-content-center">
                     <div className="col-md-8">
                         <div className="card">
-                            <div className="card-header">React Component</div>
+                            <div className="card-header">Create Task</div>
 
                             <div className="card-body">
                                 <form onSubmit={this.handleSubmit}>

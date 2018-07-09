@@ -21,35 +21,20 @@ class TaskEdit extends Component {
     //handle submit
     handleSubmit(e) {
         e.preventDefault();
-        axios.post('/tasks', {
-            name: this.state.name
-        }).then(response => {
-            //console.log('from handle sumit', response);
-            this.setState({
-                tasks: [response.data, ...this.state.tasks],
-                name: ''
-            })
-        });
-    }
-    //render task
-    renderTask() {
-        return this.state.tasks.map(task => (
-            <div key={task.id} className="media">
-                <div className="media-body">
-                    <div>
-                        {task.name} 
-                        <Link to={`/${task.id}/edit`} className="btn btn-sm btn-success float-right">Update</Link>
-                        <button onClick={() => this.handleDelete(task.id)} className="btn btn-sm btn-warning float-right">Delete</button>
-                    </div>
-                </div>
-            </div>            
-        ));
+        axios
+	        .put(`/tasks/${this.props.match.params.id}`, {
+	            name: this.state.name
+	        }).then(response => {
+	            //console.log('from handle sumit', response);
+	            this.props.history.push('/');
+	        });
     }
     //get all the tasks from backend
     getTasks() {
-        axios.get('/tasks').then(response => 
+        axios.get(`/tasks/${this.props.match.params.id}/edit`).then(response => 
             this.setState({
-                tasks: [...response.data.tasks]
+                task: response.data.task,
+                name: response.data.task.name
             })
         );
     }
@@ -57,25 +42,13 @@ class TaskEdit extends Component {
     componentWillMount() {
         this.getTasks();
     }
-    //handle delete
-    handleDelete(id) {
-        //remove from local state
-        const isNotId = task => task.id !== id;
-        const updatedTasks = this.state.tasks.filter(isNotId);
-        this.setState({
-            tasks: updatedTasks
-        });
-        //make delete request to the backend
-        axios.delete(`/tasks/${id}`);
-    }
-
     render() {
         return (
             <div className="container">
                 <div className="row justify-content-center">
                     <div className="col-md-8">
                         <div className="card">
-                            <div className="card-header">React Component</div>
+                            <div className="card-header">Edit Component</div>
 
                             <div className="card-body">
                                 <form onSubmit={this.handleSubmit}>
@@ -90,11 +63,8 @@ class TaskEdit extends Component {
                                             required 
                                         />
                                     </div>
-                                    <button type="submit" className="btn btn-primary">Create Task</button>
+                                    <button type="submit" className="btn btn-primary">Edit Task</button>
                                 </form>
-                                <hr />
-
-                                {this.renderTask()}
                             </div>
                         </div>
                     </div>

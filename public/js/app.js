@@ -55849,6 +55849,17 @@ var App = function (_Component) {
                             'div',
                             null,
                             task.name,
+                            ' ',
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'span',
+                                { className: 'text-muted' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
+                                'by ',
+                                task.user.name,
+                                ' |',
+                                ' ',
+                                task.updated_at.split(' ').slice(1).join()
+                            ),
                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                 __WEBPACK_IMPORTED_MODULE_1_react_router_dom__["b" /* Link */],
                                 { to: '/' + task.id + '/edit', className: 'btn btn-sm btn-success float-right' },
@@ -55861,7 +55872,8 @@ var App = function (_Component) {
                                     }, className: 'btn btn-sm btn-warning float-right' },
                                 'Delete'
                             )
-                        )
+                        ),
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('hr', null)
                     )
                 );
             });
@@ -55920,7 +55932,7 @@ var App = function (_Component) {
                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                 'div',
                                 { className: 'card-header' },
-                                'React Component'
+                                'Create Task'
                             ),
                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                 'div',
@@ -60013,8 +60025,6 @@ module.exports = hoistNonReactStatics;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_router_dom__ = __webpack_require__(82);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -60059,49 +60069,11 @@ var TaskEdit = function (_Component) {
             var _this2 = this;
 
             e.preventDefault();
-            axios.post('/tasks', {
+            axios.put('/tasks/' + this.props.match.params.id, {
                 name: this.state.name
             }).then(function (response) {
                 //console.log('from handle sumit', response);
-                _this2.setState({
-                    tasks: [response.data].concat(_toConsumableArray(_this2.state.tasks)),
-                    name: ''
-                });
-            });
-        }
-        //render task
-
-    }, {
-        key: 'renderTask',
-        value: function renderTask() {
-            var _this3 = this;
-
-            return this.state.tasks.map(function (task) {
-                return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'div',
-                    { key: task.id, className: 'media' },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'div',
-                        { className: 'media-body' },
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'div',
-                            null,
-                            task.name,
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                __WEBPACK_IMPORTED_MODULE_1_react_router_dom__["b" /* Link */],
-                                { to: '/' + task.id + '/edit', className: 'btn btn-sm btn-success float-right' },
-                                'Update'
-                            ),
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                'button',
-                                { onClick: function onClick() {
-                                        return _this3.handleDelete(task.id);
-                                    }, className: 'btn btn-sm btn-warning float-right' },
-                                'Delete'
-                            )
-                        )
-                    )
-                );
+                _this2.props.history.push('/');
             });
         }
         //get all the tasks from backend
@@ -60109,11 +60081,12 @@ var TaskEdit = function (_Component) {
     }, {
         key: 'getTasks',
         value: function getTasks() {
-            var _this4 = this;
+            var _this3 = this;
 
-            axios.get('/tasks').then(function (response) {
-                return _this4.setState({
-                    tasks: [].concat(_toConsumableArray(response.data.tasks))
+            axios.get('/tasks/' + this.props.match.params.id + '/edit').then(function (response) {
+                return _this3.setState({
+                    task: response.data.task,
+                    name: response.data.task.name
                 });
             });
         }
@@ -60123,22 +60096,6 @@ var TaskEdit = function (_Component) {
         key: 'componentWillMount',
         value: function componentWillMount() {
             this.getTasks();
-        }
-        //handle delete
-
-    }, {
-        key: 'handleDelete',
-        value: function handleDelete(id) {
-            //remove from local state
-            var isNotId = function isNotId(task) {
-                return task.id !== id;
-            };
-            var updatedTasks = this.state.tasks.filter(isNotId);
-            this.setState({
-                tasks: updatedTasks
-            });
-            //make delete request to the backend
-            axios.delete('/tasks/' + id);
         }
     }, {
         key: 'render',
@@ -60158,7 +60115,7 @@ var TaskEdit = function (_Component) {
                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                 'div',
                                 { className: 'card-header' },
-                                'React Component'
+                                'Edit Component'
                             ),
                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                 'div',
@@ -60182,11 +60139,9 @@ var TaskEdit = function (_Component) {
                                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                         'button',
                                         { type: 'submit', className: 'btn btn-primary' },
-                                        'Create Task'
+                                        'Edit Task'
                                     )
-                                ),
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('hr', null),
-                                this.renderTask()
+                                )
                             )
                         )
                     )
